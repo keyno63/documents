@@ -44,4 +44,12 @@ version は 2020/05 現在のもの
 * user 名 : fujiwara
 * pass : fujiwara
 
-### DSL
+### SQL の書き方
+
+以下のパターン  
+* DML
+* SQL インターポレーション
+* QueryDSL(type safe query buikder)
+* Auto Macro
+
+オススメは「SQL インターポレーション」らしい
