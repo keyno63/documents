@@ -49,7 +49,7 @@ version は 2020/05 現在のもの
 以下のパターン  
 * DML
 * SQL インターポレーション
-* QueryDSL(type safe query buikder)
+* QueryDSL(type safe query builder)
 * Auto Macro
 
 オススメは「SQL インターポレーション」らしい
