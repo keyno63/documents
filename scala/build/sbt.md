@@ -20,7 +20,8 @@ sdk install sbt 1.3.12
 
 ## 実行
 
-### CLI
+### sbt シェル
+インタラクティブモード、対話形式で実行をすすめる
 ```
 $ sbt
 [info] Loading global plugins from /home/XXXXX/.sbt/1.0/plugins
@@ -30,7 +31,10 @@ $ sbt
 sbt:XXXXX>
 ```
 
-### 引数
+### バッチモード
+引数に値をわたして sbt に処理を実行してもらう
 ```
 $ sbt build
 ```
+
+## コマンド一覧
