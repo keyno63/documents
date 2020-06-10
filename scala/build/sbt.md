@@ -1,6 +1,7 @@
 # sbt
 build ツール
 Lightbend 製の公式ビルドツール
+(公式ドキュメント)[https://www.scala-sbt.org/1.x/docs/ja/index.html]
 
 ## インストール
 
