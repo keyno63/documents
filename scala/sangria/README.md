@@ -23,3 +23,4 @@ https://github.com/sangria-graphql/sangria-akka-http-example
 なさそう
 公式ドキュメント曰、[sample server](http://try.sangria-graphql.org/)   があったらしいが、期限切れ  
 理由は察してみることも必要
+
