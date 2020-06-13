@@ -28,6 +28,9 @@ https://github.com/sangria-graphql/sangria-akka-http-example
 
 https://graphql.org/learn/serving-over-http/
 
+- Request type  
+POST で送信  
+
 - Contents type  
 ```
 application/json
