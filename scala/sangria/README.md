@@ -35,3 +35,13 @@ POST で送信
 ```
 application/json
 ```
+
+## メモ
+実装しようとおもったが、よくわからない
+よくわからないときは要素分解
+
+- スキーマの定義  
+GraphQl のスキーマを Class などで定義する
+- Json parser  
+Body の JSON を parse する  
+ありもの（oss）を使おう
