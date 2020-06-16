@@ -39,9 +39,17 @@ application/json
 ## メモ
 実装しようとおもったが、よくわからない
 よくわからないときは要素分解
-
+- query, mutation  
+query: 非破壊、副作用のない操作（HTTP GET で操作していたもの）  
+mutation: 破壊、副作用ありの操作（HTTP GET/DELETE/PUT で操作していたもの）
 - スキーマの定義  
-GraphQl のスキーマを Class などで定義する
+GraphQl のスキーマを Class などで定義する  
+EnumType: なんだろうこれ？  
+InterfaceType:   
+ObjectType: GraphQL のクエリされるオブジェクト  
+Field:  
+Argument:  
 - Json parser  
 Body の JSON を parse する  
 ありもの（oss）を使おう
+今回は circe を使いました
