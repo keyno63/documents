@@ -40,3 +40,49 @@ libraryDependencies ++= Seq(specs2 % Test , guice ) ++
 
 バージョンは 2020/06 のものを使用
 
+## Controller 部分
+雛形を作る  
+```scala
+@Singleton
+class GraphQlController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext)
+  extends AbstractController(cc)
+  with Circe {
+  def graphql(): Action[Json] = Action(circe.json).async { request => ???
+  }
+}
+```
+- Controller は AbstractController を継承  
+慣例
+- Controller は Circe を継承  
+リクエストボディの JSON parse のため
+- Controller の第二引数に ExecutionContext の implicit パラメーター  
+非同期処理（Future）の処理を行うために実装が必要
+- エントリポイントになるメソッドの型は `Action[Json]`  
+レスポンスは application/json を返すため
+- メソッド右辺の最初は `Action(circe.json).async`  
+リクエストは application/json で body の値を受けたいため、Action の引数は circe.json を渡す  
+非同期処理を行いたいため、 async を使う  
+
+
+もうちょっと書く.   
+JSON の parse, GraphQL 用の処理のメソッドを呼び出す.
+```scala
+@Singleton
+class GraphQlController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext)
+  extends AbstractController(cc)
+  with Circe {
+  def graphql(): Action[Json] = Action(circe.json).async { request =>
+    parser.parse(request.body.toString) match {
+      case Right(json) => execgraphQL(json)
+      case _ => Future(BadRequest(s"Parse Error JSON. body=[${request.body.toString}]"))
+    }
+  }
+}
+```
+
+- parser.parse(request.body.toString)  
+body の parse  
+circe の parser を使って、request body の json を解析  
+- execgraphQL(json) は graphql に沿った処理. あとから実装するメソッド.  
+- ワイルドカード部分は parse 失敗など. そういう時は BadRequest.  
+
