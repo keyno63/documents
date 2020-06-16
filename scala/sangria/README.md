@@ -45,10 +45,10 @@ mutation: 破壊、副作用ありの操作（HTTP GET/DELETE/PUT で操作し�
 - スキーマの定義  
 GraphQl のスキーマを Class などで定義する  
 EnumType: なんだろうこれ？  
-InterfaceType:   
+InterfaceType: Object のインターフェイス  
 ObjectType: GraphQL のクエリされるオブジェクト  
-Field:  
-Argument:  
+Field: クエリのフィールド 
+Argument: 引数に渡されるやつの型 
 - Json parser  
 Body の JSON を parse する  
 ありもの（oss）を使おう
