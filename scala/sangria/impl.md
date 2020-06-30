@@ -86,3 +86,7 @@ circe の parser を使って、request body の json を解析
 - execgraphQL(json) は graphql に沿った処理. あとから実装するメソッド.  
 - ワイルドカード部分は parse 失敗など. そういう時は BadRequest.  
 
+## Service 部分
+いわゆるビジネスロジック  
+T.B.D.  
+
