@@ -35,3 +35,29 @@ libraryDependencies += "com.github.ghostdogpr" %% "caliban-cats"       % "0.8.3"
 libraryDependencies += "com.github.ghostdogpr" %% "caliban-monix"      % "0.8.3" // interop with monix
 libraryDependencies += "com.github.ghostdogpr" %% "caliban-federation" % "0.8.3" // interop with apollo federation
 ```
+
+## 簡単な例
+
+Caliban を使って GraphQL API を作成することは、 case class の作成と同じくらい簡単です。  
+実際、 GraphQL スキーマ全体は case class 構造（フィールドや参照する他の型）から得られ、  
+Resolver はその case class の単なるインスタンスです。  
+
+例として、`Character` クラスと2つの関数`getCharacters`と`getCharacter`があるとします。  
+```scala
+case class Character(name: String, age: Int)
+
+def getCharacters: List[Character] = ???
+def getCharacter(name: String): Option[Character] = ???
+```
+
+API を表す Queries という名前の case class を作ってみましょう。  
+2つのフィールドは公開する関数（関数のレコード）に基づいて命名とモデル化がされています。  
+実際の関数を呼び出す値を class に作成します。これが Resolver です。  
+```scala
+// schema
+case class CharacterName(name: String)
+case class Queries(characters: List[Character],
+                   character: CharacterName => Option[Character])
+// resolver
+val queries = Queries(getCharacters, args => getCharacter(args.name))
+```
