@@ -17,3 +17,21 @@ Caliban は Scala で GraphQl バックエンドを作成するための純粋�
 * 最小のボイラープレート：APIで使う全ての型に対して、手動での定義は必要ありません。
 
 Calibanは、フロントエンドのGraphQL構築にも使用できます。詳細については、専用セクションを参照してください。  
+
+## 依存
+`caliban` を使うには、`build.sbt` に以下の行を追加してください。  
+```sbtshell
+libraryDependencies += "com.github.ghostdogpr" %% "caliban" % "0.8.3"
+```
+
+以下のモジュールはオプションです。
+```sbtshell
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-http4s"     % "0.8.3" // routes for http4s
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-akka-http"  % "0.8.3" // routes for akka-http
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-play"       % "0.8.3" // routes for play
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-finch"      % "0.8.3" // routes for finch
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-uzhttp"     % "0.8.3" // routes for uzhttp
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-cats"       % "0.8.3" // interop with cats effect
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-monix"      % "0.8.3" // interop with monix
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-federation" % "0.8.3" // interop with apollo federation
+```
