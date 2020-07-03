@@ -62,16 +62,10 @@ case class Queries(characters: List[Character],
 val queries = Queries(getCharacters, args => getCharacter(args.name))
 ```
 
-The next step is creating our GraphQL API definition.  
-First, we wrap our query resolver inside a RootResolver, the root object that contains queries, mutations and subscriptions.  
-Only queries are mandatory.  
-Then we can call the graphQL function which will turn our simple resolver value into a GraphQL API definition.  
-The whole schema will be derived at compile time, meaning that if it compiles, it will be able to serve it.  
-
 次のステップは GraphQL API 定義をつくることです。  
 最初に、クエリーリゾルバーを `RootResolver` でラップします。  
 `RootResolver` は Query、 Mutation、 Subscription を含むルートオブジェクトです。必須なのは Query のみです。  
-次に、簡単なリゾルバー値を GraphQL API 定義に変換する graphQL 関数を呼び出します。  
+次に、簡単なリゾルバー値を GraphQL API 定義に変換する `graphQL` 関数を呼び出します。  
 スキーマ全体はコンパイル時に生成されます。つまり、コンパイルをすることでスキーマを提供することができます。  
 
 ```scala
@@ -80,8 +74,6 @@ import caliban.RootResolver
 
 val api = graphQL(RootResolver(queries))
 ```
-
-You can use `api.render` to visualize the schema generated
 
 与えられたスキーマを可視化するために `api.render` を使えます。  
 今回の場合では：
