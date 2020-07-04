@@ -135,7 +135,7 @@ type Queries {
 Caliban は `Int`、 `String`、 `List`、 `Option`、などのような一般的な型への自動生成を提供します。  
 `caliban.schema.ArgBuilder` の implicit インスタンスを与えることにより、独自型をサポートすることも可能です。
 
-::: ヒント
+::: ヒント  
 タプルへの `ArgBuilder` はありません。 複数の引数を持つ場合、タプルの代わりに全ての引数を含んだ case class を使ってください。
 :::
 
