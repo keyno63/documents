@@ -152,7 +152,6 @@ case class Queries(characters: Task[List[Character]],
 
 ZIO 環境（`R`=`Any`） を使用しない場合、特別にすることはありません。
 
-If you require a ZIO environment, you will need to have the content of `caliban.schema.GenericSchema[R]` for your custom `R` in scope when you call `graphQL(...)`.
 ZIO 環境が必要な場合、`graphQL(...)`  を呼び出す際にスコープ内に独自の `R` の`caliban.schema.GenericSchema[R]` の content が必要です。
 
 ```scala
