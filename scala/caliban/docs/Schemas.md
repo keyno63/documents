@@ -170,3 +170,67 @@ Caliban はリッチ化されたデータ型へのアノテーションをいく
 - `@GQLInterface` ユニオンの代わりにインターフェイスを生成する sealed trait を強制します。
 - `@GQLDirective(directive: Directive)` を使用すると、フィールドや型を明示することができます。
 
+## 独自型
+
+Caliban は `Int`、 `String`、 `List`、 `Option`、などのような一般的な型への自動生成を提供します。  
+`caliban.schema.Schema` の implicit インスタンスを与えることにより、独自型をサポートすることも可能です。  
+
+これを行うための簡単な方法は、既存のインスタンスを再利用し、`contramap`を使用して定義した型から元の型にマッピングすることです。  
+以下は [refined](https://github.com/fthomas/refined) の `NonEmptyString` のインスタンスを作成し、`String`型の既存インスタンスを再利用する例です。
+
+```scala
+import caliban.schema._
+implicit val nonEmptyStringSchema: Schema[Any, NonEmptyString] = Schema.stringSchema.contramap(_.value)
+```
+
+`scalarSchema`ヘルパーを使用して独自のスカラー型を作成し、型から名前、オプションの説明、および関数を` ResponseValue`に指定することもできます。
+
+```scala
+import caliban.schema._
+implicit val unitSchema: Schema[Any, Unit] = scalarSchema("Unit", None, _ => ObjectValue(Nil))
+```
+
+入力の一部として独自型を使用している場合は、 `caliban.schema.ArgBuilder`の implicit instance も生成する必要があります。  
+たとえば、 `java.time.LocalDate`を扱う方法は次のとおりです。
+
+```scala
+implicit val localDateArgBuilder: ArgBuilder[LocalDate] = {
+  case StringValue(value) =>
+    Try(LocalDate.parse(value))
+      .fold(ex => Left(ExecutionError(s"Can't parse $value into a LocalDate", innerThrowable = Some(ex))), Right(_))
+  case other => Left(ExecutionError(s"Can't build a LocalDate from input $other"))
+}
+```
+
+デフォルトでは値型はラップされていません。
+
+## コードの生成
+
+Caliban は GraphQL スキーマから Scala コードを自動生成できます。
+
+この機能を使うためには、`caliban-codegen-sbt` をプロジェクトに追加し、有効にしてください。
+
+```scala
+addSbtPlugin("com.github.ghostdogpr" % "caliban-codegen-sbt" % "0.8.3")
+enablePlugins(CodegenPlugin)
+```
+
+次に sbt コマンドの `calibanGenSchema` を実行します。
+```scala
+calibanGenSchema schemaPath outputPath [--scalafmtPath path] [--headers name:value,name2:value2] [--packageName name] [--effect fqdn.Effect]
+
+calibanGenSchema project/schema.graphql src/main/MyAPI.scala
+```
+
+このコマンドは、 `outputPath` にScalaファイルを作成します。  
+ここには`schemaPath`で定義された GraphQL スキーマにある全ての型が含まれています。    
+ファイルの代わりに、URLを指定すると、内部参照を使用してスキーマが取得されます。
+
+生成されたコードは、 `--scalafmtPath`オプションで定義された設定を使用して Scalafmt でフォーマットされます（デフォルト：` .scalafmt.conf`）。  
+`schemaPath`のURLを与えた場合、` --headers`オプションを使用してリクエストヘッダーを指定することができます。
+
+生成されたコードのパッケージは、 `outputPath`のフォルダーから分岐します。  
+これは、 `--packageName`オプションで代替パッケージを指定するでオーバーライドできます。
+
+デフォルトでは、それぞれの Query と Mutation は `zio.UIO`作用にラップされます。  
+これは、 `--effect`オプションで代替作用を指定することでオーバーライドできます。  
