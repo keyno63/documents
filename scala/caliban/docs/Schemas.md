@@ -115,3 +115,59 @@ type Mechanic {
 `Union` 型の代わりに `Interface` を使用する場合、`@GQLInterface` アノテーションを sealed trait に追加します。  
 同じ型を返し続ける限り、sealed class を拡張した case class に共通する全てのフィールドを使用したインターフェースが生成されます。
 
+## 引数
+
+引数をとるフィールドを宣言するには、引数を表す専用の case class を作成し、フィールドをクラスから結果の型への _関数_ にします。  
+
+```scala
+case class FilterArgs(origin: Option[Origin])
+case class Queries(characters: FilterArgs => List[Character])
+```
+
+以上のスニペットは、以下の GraphQL 型を生成します。
+
+```graphql
+type Queries {
+  characters(origin: Origin): [Character!]!
+}
+```
+
+Caliban は `Int`、 `String`、 `List`、 `Option`、などのような一般的な型への自動生成を提供します。  
+`caliban.schema.ArgBuilder` の implicit インスタンスを与えることにより、独自型をサポートすることも可能です。
+
+::: ヒント
+タプルへの `ArgBuilder` はありません。 複数の引数を持つ場合、タプルの代わりに全ての引数を含んだ case class を使ってください。
+:::
+
+## 作用
+
+フィールドは ZIO の作用を返すことができます。  
+これにより、ZIO が提供する全ての機能（タイムアウト、リトライ、ZIO環境へのアクセス、メモ化など）を活用することができます。  
+対応するフィールドを必要とするクエリが実行されるごとに作用が発生します。
+
+```scala
+case class Queries(characters: Task[List[Character]],
+                   character: CharacterName => RIO[Console, Character])
+```
+
+ZIO 環境（`R`=`Any`） を使用しない場合、特別にすることはありません。
+
+If you require a ZIO environment, you will need to have the content of `caliban.schema.GenericSchema[R]` for your custom `R` in scope when you call `graphQL(...)`.
+ZIO 環境が必要な場合、`graphQL(...)`  を呼び出す際にスコープ内に独自の `R` の`caliban.schema.GenericSchema[R]` の content が必要です。
+
+```scala
+object schema extends GenericSchema[MyEnv]
+import schema._
+```
+
+## アノテーション
+
+Caliban はリッチ化されたデータ型へのアノテーションをいくつかサポートしています。 
+
+- `@GQLName("name")` を使用すると、データ型、およびフィールドに別の名称を指定できます。
+- `@GQLInputName("name")` を使用すると、入力として使用されるデータ型に別の名称を指定できます（デフォルトでは、プレフィックスに `Input` が型名に追加されます）。
+- `@GQLDescription("description")` を使用すると、データ型、およびフィールドの説明を追加できます。この説明はスキーマが内部参照された場合に表示されます。
+- `@GQLDeprecated("reason")` を使用すると、フィールドや enum 値を deprecateting(廃止) にすることができます。
+- `@GQLInterface` ユニオンの代わりにインターフェイスを生成する sealed trait を強制します。
+- `@GQLDirective(directive: Directive)` を使用すると、フィールドや型を明示することができます。
+
