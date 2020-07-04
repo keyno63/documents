@@ -1,4 +1,4 @@
-# Getting Started
+# Getting Started(最初に)
 
 [原文](https://ghostdogpr.github.io/caliban/docs/)  
 
@@ -88,3 +88,89 @@ type Queries {
   character(name: String!): Character
 }
 ```
+
+リクエストを処理するために、API をインタープリターに変換する必要があります。  
+これは `.interpreter` を使えば簡単にできます。  
+インタープリターは API 定義の軽量なラッパーです。  
+これはミドルウェアにプラグインすることができますし、  
+環境とエラー型を変更することができます(詳細は [`Middlewere`](Middleware.md) を参照してください)。  
+異常な型が見つかった場合、`ValidationError` を起こし、インタープレターの作成に失敗する可能性があります。  
+
+```scala
+for {
+  interpreter <- api.interpreter
+} yield interpreter
+```
+
+与えられた GraphQL クエリー を用いて `interpreter.execute` を呼び出すと、`ZIO[R, Nothing, GraphQLResponse[CalibanError]]` をレスポンスとして取得します。  
+`GraphQLResponse` は次のように定義されます。  
+```scala
+case class GraphQLResponse[+E](data: ResponseValue, errors: List[E])
+```
+
+`ResponseValue#toString` を用いて JSON 形式の結果を取得します。
+```scala
+val query = """
+  {
+    characters {
+      name
+    }
+  }"""
+
+for {
+  result <- interpreter.execute(query)
+  _      <- zio.console.putStrLn(result.data.toString)
+} yield ()
+```
+
+`CalibanError` の可能性は以下になります:
+
+* `ParsingError`: クエリーに異常なシンタックス がある場合
+* `ValidationError`: 解析したクエリーに一致するスキーマが無い場合
+* `ExecutionError`: クエリーの実行中にエラーが発生した場合
+
+Caliban 自体はどのウェブフレームワークとも紐づいていません。  
+選択したプロトコルやライブラリーを用いてこの機能を自由に公開することができます。  
+[caliban-http4s](https://github.com/ghostdogpr/caliban/tree/master/adapters/http4s) モジュールは `Http4sAdapter` を提供します。  
+`Http4sAdapter`  は http4s を使用し、 HTTP や WebSocket 上でインタープリターを公開します。  
+似たようなアダプターとして、Akka HTTP、Play、Finch、および uzhttp 用のものがあります。  
+
+::: GraphQL API の結合
+
+全てのルートフィールドをひとつの case class に定義する必要はありません。  
+似たような case class を複数使用し、 `|+|` 演算子を使って `GraphQL` オブジェクトを結合する事が出来ます。  
+
+```scala
+val api1 = graphQL(...)
+val api2 = graphQL(...)
+
+val api = api1 |+| api2
+
+```
+`.rename` を使用し、生成されたルート型の名称を変更することが可能です。  
+:::
+
+## Mutations
+
+query と同じように mutation を作成できます。  
+`RootResolver` の第2引数に mutation を渡してください。  
+
+```scala
+case class CharacterArgs(name: String)
+case class Mutations(deleteCharacter: CharacterArgs => Task[Boolean])
+val mutations = Mutations(???)
+val api = graphQL(RootResolver(queries, mutations))
+```
+
+## Subscriptions
+
+同様に、subscription は `RootResolver` の第3引数に渡されます。
+
+```scala
+case class Subscriptions(deletedCharacter: ZStream[Any, Nothing, Character])
+val subscriptions = Subscriptions(???)
+val api = graphQL(RootResolver(queries, mutations, subscriptions))
+```
+
+サブスクリプションルート case class のすべてのフィールドは”必ず” `ZStream`、および`? => ZStream` のオブジェクトを返します。  
+subscription のリクエストを受診した場合、`ResponseValue` (`StreamValue`)の出力ストリームが`ObjectValue`内にラップされて返されます。
