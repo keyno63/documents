@@ -33,7 +33,7 @@ GraphQL スキーマは、リゾルバーで与えられた型から（リフレ
 | Json (from [Circe](https://github.com/circe/circe)) | Json (custom scalar, need `import caliban.interop.circe.json._`) |
 | Json (from [play-json](https://github.com/playframework/play-json)) | Json (custom scalar, need `import caliban.interop.play.json._`) |
 
-独自型のサポート方法は [Custom Types](#custom-types) の章を参照してください。  
+独自型のサポート方法は [独自型](#独自型) の章を参照してください。  
 
 もし Caliban にサポートして欲しい他の標準の型があれば、遠慮なく PR や [issue の作成](https://github.com/ghostdogpr/caliban/issues)  をしてください。
 
@@ -54,7 +54,7 @@ implicit val characterSchema = Schema.gen[Character]
 
 :::
 
-## Enums, unions, interfaces
+## Enum, 複合, インターフェース
 
 sealed trait は、その内容に応じて別の GraphQL 型に変換されます。
 
