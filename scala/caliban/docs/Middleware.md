@@ -105,3 +105,36 @@ val i4: GraphQLInterpreter[MyEnv with Clock, CalibanError] =
   )
 ```
 
+## エラーレスポンスのカスタマイズ
+
+クエリー実行時の様々な段階で、エラーが発生する可能性があります。  
+Caliban は `CalibanError` の色々なインスタンスを GraphQL 仕様に準拠したレスポンスに表示します。  
+これはエラーを作用のエラーチャンネルに入れてしまうため、ある時点で `ExecutionError` に遭遇する可能性が高くなります。  
+Caliban がクエリー実行中に発生したエラーに関する基本的なメッセージを表示できるようにするため、エラーに `Throwable` を継承することは重要です。  
+
+より効果的なエラーハンドリングをするため、GraphQL の仕様上ではエラーレスポンスに [`extension`](http://spec.graphql.org/June2018/#example-fce18) オブジェクトを使うことができます。  
+たとえば、このオブジェクトにはフロントエンドで処理できる列挙型のエラーコードをモデル化するための `code` 情報を含めることができます。  
+この情報を生成するため、`GraphQLInterpreter` 上の `mapError` 関数を使うことができます。
+`ExecutionError` 内の独自ドメインエラーを意味のあるエラーコードに変換する例を以下になります。  
+
+```scala
+sealed trait ExampleAppEncodableError extends Throwable {
+    def errorCode: String
+}
+case object UnauthorizedError extends ExampleAppEncodableError {
+    override def errorCode: String = "UNAUTHORIZED"
+}
+
+def withErrorCodeExtensions[R](
+  interpreter: GraphQLInterpreter[R, CalibanError]
+): GraphQLInterpreter[R, CalibanError] = interpreter.mapError {
+  case err @ ExecutionError(_, _, _, Some(exampleError: ExampleAppEncodableError), _) =>
+    err.copy(extensions = Some(ObjectValue(List(("errorCode", StringValue(exampleError.errorCode))))))
+  case err: ExecutionError =>
+    err.copy(extensions = Some(ObjectValue(List(("errorCode", StringValue("EXECUTION_ERROR"))))))
+  case err: ValidationError =>
+    err.copy(extensions = Some(ObjectValue(List(("errorCode", StringValue("VALIDATION_ERROR"))))))
+  case err: ParsingError =>
+    err.copy(extensions = Some(ObjectValue(List(("errorCode", StringValue("PARSING_ERROR"))))))
+}
+```
