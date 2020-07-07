@@ -101,3 +101,44 @@ def getUserNameById(id: Int): ZQuery[Any, Throwable, String] =
 ```
 
 `ZQuery` を実行するために、`ZIO[R, E, A]` を返す `ZQuery#run` を単純に使いました。  
+
+## ZQuery のコンストラクターとオペレーター
+
+`ZQuery` の作り方にはいくつか方法があります。  
+`ZQuery.fromRequest` について触れましたが、他にも次の方法があります。  
+- `ZQuery.succeed` で純粋な値から作成します  
+- `ZQuery.fromEffect` で作用値から作成  
+- `ZQuery.collectAllPar`と` ZQuery.foreachPar`、  
+およびそれらのシーケンシャルに相当する `ZQuery.collectAll`と` ZQuery.foreach`を使用して、  
+複数のクエリーから作成します
+
+
+`ZQuery` オブジェクトがあれば、以下を使うこともできます。
+- `map`、および `mapError` を使って、返された結果やエラーを変更
+- `flatMap`、または `zip` を使って、他の `ZQuery` オブジェクトと結合
+- `provide`、および `provideSome` を使って、要求される`R`のいくつかを削除
+
+`ZQuery` を実行するにはいくつかの方法があります。  
+- `runCache`は、事前に取得した特定のキャッシュを使用してクエリーを実行します。  
+これは、新規リクエストを実行せずにクエリーを確実に「再現」するのに便利です。  
+- `runLog`はクエリーを実行し、実行されたすべてのリクエストとその結果の完全なログを含むキャッシュとともに結果を返却します。  
+これは、クエリー実行のロギング、および分析するのに便利です。  
+- `run`はクエリーを実行し、その結果を返します。
+
+## Caliban での ZQuery の使用
+
+Caliban で `ZQuery` を使うには、 API 定義に `ZQuery` 型のフィールドを単純に追加するだけです。  
+
+```scala
+case class Queries(
+  users: ZQuery[Any, Nothing, List[User]],
+  user: UserArgs => ZQuery[Any, Nothing, User])
+```
+
+クエリーの実行中、Caliban は `ZQuery` を返すリクエストされた全てのフィールドを1つの `ZQuery` にマージします。  
+その際に可能な限り全ての最適化が適応される様にします。  
+
+[examples](https://github.com/ghostdogpr/caliban/tree/master/examples) プロジェクトは [GraphQL の最適化について](https://blog.apollographql.com/optimizing-your-graphql-request-waterfalls-7c3f3360b051)で説明されている問題の2つのバージョンを提供します。  
+
+- [naive](https://github.com/ghostdogpr/caliban/tree/master/examples/src/main/scala/caliban/optimizations/NaiveTest.scala) バージョンでは、47 リクエストの結果としてフィールドは単に `IO` を返す
+- [optimized](https://github.com/ghostdogpr/caliban/tree/master/examples/src/main/scala/caliban/optimizations/OptimizedTest.scala) バージョンでは、8リクエストのみの結果として、フィールドは`ZQuery`を返す 
