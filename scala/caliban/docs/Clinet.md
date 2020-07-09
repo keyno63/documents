@@ -44,3 +44,136 @@ calibanGenClient project/schema.graphql src/main/Client.scala
 `schemaPath` から URL を生成すると、`--headers` オプションでリクエストヘッダーを与えられます。  
 生成コードのパッケージは `outputPath` のフォルダーから決定されます。  
 このパッケージ名は `--packageName` オプションを使うことで上書きすることも可能です。
+
+## クエリーの生成
+
+Once the boilerplate code is generated, you can start building queries. For each *type* in your schema, a corresponding Scala object has been created. For each *field* in your schema, a corresponding Scala function has been created.
+
+ボイラープレートコードが生成されたら、クエリーの生成を始めることができます。  
+スキーマの *型* ごとに、対応する Scala オブジェクトが作成されます。  
+スキーマの *フィールド* ごとに、対応する Scala 関数が作成されます。  
+
+例として、以下のようなスキーマを定義します。  
+```graphql
+type Character {
+  name: String!
+  nicknames: [String!]!
+  origin: Origin!
+}
+```
+
+以下のコードが生成されます。  
+```scala
+object Character {
+  def name: SelectionBuilder[Character, String]            = ???
+  def nicknames: SelectionBuilder[Character, List[String]] = ???
+  def origin: SelectionBuilder[Character, Origin]          = ???
+}
+```
+
+`SelectionBuilder[Origin, A]`  は `A` 型の結果を返す 親型 `Origin` からのセレクションです。 
+この例では、 `name` は `String` を返す `Character` からのセレクションです。  
+
+`~` セレクションを使うことで複数のセレクションを結合できます。  
+新しい結果型は2つの結合された結果型からのタプルになります。  
+結合できるのは同じオリジンをもつセレクションだけということに注意してください。  
+
+```scala
+val selection: SelectionBuilder[Character, (String, List[String])] =
+  Character.name ~ Character.nicknames
+```
+
+複数のフィールドを組み合わせる場合は、 case class を使用してデータを表すと便利です。  
+これはネストされたタプルが表示されないようにするためです。  
+`mapN`を使用することで、ネストされたタプルを case class にマッピできます。
+
+```scala
+case class CharacterView(name: String, nickname: List[String], origin: Origin)
+
+val character: SelectionBuilder[Character, CharacterView] =
+  (Character.name ~ Character.nicknames ~ Character.origin)
+    .mapN(CharacterView)
+```
+
+オブジェクト型を返すフィールドは、別の `SelectionBuilder` である内部セレクションを要求します。  
+次の `Query` 型と比べてみましょう。  
+
+```graphql
+type Query {
+  characters: [Character!]!
+}
+```
+`characters` を呼び出すときは、 返された `Character` 上で選択されたフィールドを示すために  
+`SelectionBuilder[Character, ?]` を与える必要があります。  
+
+```scala
+val query: SelectionBuilder[RootQuery, List[CharacterView]] =
+  Query.characters {
+    (Character.name ~ Character.nicknames ~ Character.origin)
+      .mapN(CharacterView)
+  }
+```
+
+もしくは 作成した `character` セレクションを再利用するなら
+```scala
+val query: SelectionBuilder[RootQuery, List[CharacterView]] =
+  Query.characters {
+    character
+  }
+```
+
+これは Scala コードなので、 GraphQL フラグメントを気にする必要なく、複数の場所でセレクションを簡単に再利用できます。  
+Scala コンパイラーは、意味のあるフィールドのみを組み合わせることも保証します。
+
+フィールドが引数が必要な場合、フィールドに対するヘルパーメソッドにも引数が必要です。  
+クエリーをリッチ化すると次のようになります。  
+
+```graphql
+type Query {
+  characters(origin: Origin!): [Character!]!
+}
+```
+
+`characters` を呼んだ時に、`Origin` を与えることが必要になると、
+```scala
+val query: SelectionBuilder[RootQuery, List[CharacterView]] =
+  Query.characters(Origin.MARS) {
+    character
+  }
+```
+
+## リクエストの実行
+
+クエリ、およびミューテーションが作成されれば、それを実行する時がきました。  
+これを行うために、`.toRequest` を呼び出して `SelectionBuilder` を `sttp` リクエストに変換できます。  
+この関数は GraphQL サーバーのURLと オプションの boolean `useVariables` を引数に取ります。  
+`useVariables` は GraphQL 引数が変数を使うかどうかで決定します。デフォルト値は false です。  
+
+選んだバックエンドで `sttp` リクエストを簡単に実行できます。  
+あまり詳しくないのであれば、  [sttp docs](https://sttp.readthedocs.io/en/latest/) を参照してください。  
+
+`ZIO` に `AsyncHttpClient` バックエンドを使用する例を次に示します。
+```scala
+import sttp.client._
+import sttp.client.asynchttpclient.zio.AsyncHttpClientZioBackend
+
+AsyncHttpClientZioBackend().flatMap { implicit backend =>
+  val serverUrl = uri"http://localhost:8088/api/graphql"
+  val result: Task[List[CharacterView]] =
+    query.toRequest(serverUrl).send().map(_.body).absolve
+  ...
+}
+```
+
+結果として、戻り値の型が `SelectionBuilder` と同じ ZIO `Task` を取得します。  
+sttp リクエストには、送信するリクエストだけが含まれているわけではありません。  
+期待されるタイプへの応答のパースも行います。
+
+[examples](https://github.com/ghostdogpr/caliban/tree/master/examples/) プロジェクトには、  
+例として作った GraphQL バックエンドをクエリーすることのできる、実行可能なサンプルコードがあります。
+
+::: 注意すべき制限
+サポートされているのは、 Query と Mutation のみです。  
+Subscription は将来的にサポートに追加される予定です。  
+コード生成ツールによる型の拡張はサポートされていません。
+:::
