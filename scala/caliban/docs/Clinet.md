@@ -172,7 +172,7 @@ sttp リクエストには、送信するリクエストだけが含まれてい
 [examples](https://github.com/ghostdogpr/caliban/tree/master/examples/) プロジェクトには、  
 例として作った GraphQL バックエンドをクエリーすることのできる、実行可能なサンプルコードがあります。
 
-::: 注意すべき制限
+::: 注意すべき制限  
 サポートされているのは、 Query と Mutation のみです。  
 Subscription は将来的にサポートに追加される予定です。  
 コード生成ツールによる型の拡張はサポートされていません。
