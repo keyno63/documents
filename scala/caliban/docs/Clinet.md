@@ -1,8 +1,8 @@
 # GraphQL Client
 GraphQL クライアント
 
-**  Caliban-client** は Caliban から独立したモジュールで、型安全で関数的手法な Scala コードを使用して GraphQL クエリーを記述できるようにします。
-これは [sttp]（https://github.com/softwaremill/sttp） の上に構築されているため、選択したバックエンドを使用してリクエストを実行できます。
+**Caliban-client** は Caliban から独立したモジュールで、型安全で関数的手法である Scala コードを使用して GraphQL クエリーを記述できるようにします。
+これは [sttp](https://github.com/softwaremill/sttp) の上に構築されているため、選択したバックエンドを使用してリクエストを実行できます。
 
 Caliban と同様、 `caliban-client` は純粋関数的なインターフェースを提供し、ボイラープレートを最小限に抑えます。  
 これは次のように働きます。  
