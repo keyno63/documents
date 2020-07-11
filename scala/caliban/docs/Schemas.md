@@ -211,7 +211,7 @@ Caliban は GraphQL スキーマから Scala コードを自動生成できま�
 この機能を使うためには、`caliban-codegen-sbt` をプロジェクトに追加し、有効にしてください。
 
 ```scala
-addSbtPlugin("com.github.ghostdogpr" % "caliban-codegen-sbt" % "0.8.3")
+addSbtPlugin("com.github.ghostdogpr" % "caliban-codegen-sbt" % "0.9.0")
 enablePlugins(CodegenPlugin)
 ```
 

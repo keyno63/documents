@@ -13,7 +13,7 @@ Calibanには、いくつかの便利な機能を公開する `caliban-tools` �
 ## 依存
 
 ```
-libraryDependencies += "com.github.ghostdogpr" %% "caliban-tools" % "0.8.3"
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-tools" % "0.9.0"
 ```
 
 ## スキーマの比較

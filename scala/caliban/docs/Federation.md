@@ -11,7 +11,7 @@
 使うために、 `build.sbt` ファイルに以下の行を追加します。  
 
 ```
-libraryDependencies += "com.github.ghostdogpr" %% "caliban-federation" % "0.8.3"
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-federation" % "0.9.0"
 ```
 
 ## フェデレイション

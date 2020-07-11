@@ -15,7 +15,7 @@ Caliban と同様、 `caliban-client` は純粋関数的なインターフェー
 `caliban-client` を使うため、 `build.sbt` ファイルに以下を行を追記します。  
 
 ```
-libraryDependencies += "com.github.ghostdogpr" %% "caliban-client" % "0.8.3"
+libraryDependencies += "com.github.ghostdogpr" %% "caliban-client" % "0.9.0"
 ```
 
 Caliban-client は ScalaJS に対応しています。
@@ -28,7 +28,7 @@ Caliban-client は ScalaJS に対応しています。
 この機能を使用するには、 sbt プラグインである `caliban-codegen-sbt` をプロジェクトに追加して有効にします。  
 
 ```scala
-addSbtPlugin("com.github.ghostdogpr" % "caliban-codegen-sbt" % "0.8.3")
+addSbtPlugin("com.github.ghostdogpr" % "caliban-codegen-sbt" % "0.9.0")
 enablePlugins(CodegenPlugin)
 ```
 次に sbt コマンド `calibanGenClient` を呼び出します。  
