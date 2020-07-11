@@ -59,9 +59,9 @@ Caliban には `caliban.wrappers.Wrappers` 内に事前に作成されたラッ�
 - `onSlowQueries`は、遅いクエリー上で特定の関数を実行できるラッパーを返します。
 
 さらに、Calibanはいくつかの非仕様だが標準のラッパーも同梱しています。  
-- `caliban.wrappers.ApolloTracing.apolloTracing`は、[Apollo Tracing]（https://github.com/apollographql/apollo-tracing）形式に従って各レスポンスの` extensions`フィールドにトレースデータを追加するラッパーを返します。
-- `caliban.wrappers.ApolloCaching.apolloCaching`は、[Apollo Caching]（https://github.com/apollographql/apollo-cache-control）形式を使用して、適切に注釈が付けられたフィールドにキャッシュヒントを追加するラッパーを返します。
-- `caliban.wrappers.ApolloPersistedQueries.apolloPersistedQueries`は、[Apollo Persisted Queries]（https://github.com/apollographql/apollo-link-persisted-queries）形式のハッシュを使用してクエリーをキャッシュおよび取得するラッパーを返します。
+- `caliban.wrappers.ApolloTracing.apolloTracing`は、[Apollo Tracing](https://github.com/apollographql/apollo-tracing) 形式に従って各レスポンスの` extensions`フィールドにトレースデータを追加するラッパーを返します。
+- `caliban.wrappers.ApolloCaching.apolloCaching`は、[Apollo Caching](https://github.com/apollographql/apollo-cache-control) 形式を使用して、適切に注釈が付けられたフィールドにキャッシュヒントを追加するラッパーを返します。
+- `caliban.wrappers.ApolloPersistedQueries.apolloPersistedQueries`は、[Apollo Persisted Queries](https://github.com/apollographql/apollo-link-persisted-queries) 形式のハッシュを使用してクエリーをキャッシュおよび取得するラッパーを返します。
 
 これらは以下のように使うことができます。
 ```scala
