@@ -38,10 +38,6 @@ val wrapper = OverallWrapper { process => (request: GraphQLRequest) =>
   }
 ```
 
-You can also combine wrappers using `|+|` and create a wrapper that requires an effect to be run at each query using `EffectfulWrapper`.
-
-To use your wrapper, call `GraphQL#withWrapper` or its alias `@@`.
-
 `| + |`を使用してラッパーを結合することができますし、  
 `EffectfulWrapper`を使用して各クエリで作用を実行する必要があるラッパーを作成することもできます。
 
@@ -55,17 +51,17 @@ val api = graphQL(...) @@ wrapper
 
 ## 事前定義されたラッパー
 
-Caliban には `caliban.wrappers.Wrappers` 内に事前に作成されたラッパーを備えています。
--`maxDepth`は、指定された値よりも大きい深さのクエリーに失敗したラッパーを返します。
--`maxFields`は、指定された値よりも大きいフィールド数のクエリーに失敗したラッパーを返します。
--`timeout`は、指定された時間以上に実行時間がかかるクエリーに失敗したラッパーを返します。
--`printSlowQueries`は遅いクエリーを出力するラッパーを返します。
--`onSlowQueries`は、遅いクエリー上で特定の関数を実行できるラッパーを返します。
+Caliban には `caliban.wrappers.Wrappers` 内に事前に作成されたラッパーを備えています。  
+- `maxDepth`は、指定された値よりも大きい深さのクエリーに失敗したラッパーを返します。
+- `maxFields`は、指定された値よりも大きいフィールド数のクエリーに失敗したラッパーを返します。
+- `timeout`は、指定された時間以上に実行時間がかかるクエリーに失敗したラッパーを返します。
+- `printSlowQueries`は遅いクエリーを出力するラッパーを返します。
+- `onSlowQueries`は、遅いクエリー上で特定の関数を実行できるラッパーを返します。
 
-さらに、Calibanはいくつかの非仕様だが標準のラッパーも同梱しています。
--`caliban.wrappers.ApolloTracing.apolloTracing`は、[Apollo Tracing]（https://github.com/apollographql/apollo-tracing）形式に従って各レスポンスの` extensions`フィールドにトレースデータを追加するラッパーを返します。
--`caliban.wrappers.ApolloCaching.apolloCaching`は、[Apollo Caching]（https://github.com/apollographql/apollo-cache-control）形式を使用して、適切に注釈が付けられたフィールドにキャッシュヒントを追加するラッパーを返します。
--`caliban.wrappers.ApolloPersistedQueries.apolloPersistedQueries`は、[Apollo Persisted Queries]（https://github.com/apollographql/apollo-link-persisted-queries）形式のハッシュを使用してクエリーをキャッシュおよび取得するラッパーを返します。
+さらに、Calibanはいくつかの非仕様だが標準のラッパーも同梱しています。  
+- `caliban.wrappers.ApolloTracing.apolloTracing`は、[Apollo Tracing]（https://github.com/apollographql/apollo-tracing）形式に従って各レスポンスの` extensions`フィールドにトレースデータを追加するラッパーを返します。
+- `caliban.wrappers.ApolloCaching.apolloCaching`は、[Apollo Caching]（https://github.com/apollographql/apollo-cache-control）形式を使用して、適切に注釈が付けられたフィールドにキャッシュヒントを追加するラッパーを返します。
+- `caliban.wrappers.ApolloPersistedQueries.apolloPersistedQueries`は、[Apollo Persisted Queries]（https://github.com/apollographql/apollo-link-persisted-queries）形式のハッシュを使用してクエリーをキャッシュおよび取得するラッパーを返します。
 
 これらは以下のように使うことができます。
 ```scala
@@ -80,11 +76,11 @@ val api =
 
 ## インタープレターのラップ
 
-上記のすべてのラッパーでは、環境「R」と、常に「CalibanError」であるエラー型を変更しないようにする必要があります。  
-`wrapExecutionWith`を呼び出すことで` GraphQLInterpreter`をラップすることも可能です。  
-このメソッドは関数 `f`を受け取り、この関数` f`で `execute`メソッドをラップする新しい` GraphQLInterpreter`を返します。
+上記のすべてのラッパーでは、環境 `R` と、常に `CalibanError` になるエラー型を変更しないようにする必要があります。  
+`wrapExecutionWith` を呼び出すことで `GraphQLInterpreter` をラップすることも可能です。  
+このメソッドは関数 `f` を受け取り、この関数 `f` で `execute`メソッドをラップする新しい `GraphQLInterpreter` を返します。
 
-`mapError`（エラーをカスタマイズ）と` provide`（環境の排除）を実装するために内部的に使用されますが、  
+これは（エラーをカスタマイズする） `mapError` と（環境の排除する）`provide` を実装するために内部的に使用されますが、  
 一般的なタイムアウトの追加、応答時間のロギングなど、他の用途にも使用できます。
 
 ```scala
