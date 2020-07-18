@@ -146,7 +146,6 @@ def bookAddLogic(book: Book, token: String): UIO[Unit] = ???
 ```scala
 val api: GraphQL[Any] = addBook.toGraphQL((bookAddLogic _).tupled)
 ```
-That's it! You can combine multiple `GraphQL` objects using `|+|` and expose the result using one of Caliban's adapters.
 以上です。 `|+|`を使って複数の `GraphQL` オブジェクトの結合と、 Caliban アダプターの1つを使って結果を公開できます。  
 
 GraphQL と通常の HTTP の両方で `bookAddLogic` を再利用する場合は、  
