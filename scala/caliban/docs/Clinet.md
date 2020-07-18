@@ -39,7 +39,7 @@ calibanGenClient project/schema.graphql src/main/Client.scala
 ```
 
 このコマンドは、`schemaPath` で定義された GraphQL スキーマで定義された全ての型に対して、ヘルパー関数を含む `outputPath` に Scala ファイルを生成します。  
-ファイルの代わりに、内部検査を使うことで得られる URL とスキーマ を作ることができます。  
+ファイルの代わりに、イントロスペクションを使うことで得られる URL とスキーマ を作ることができます。  
 生成されたコードは `--scalafmtPath` オプションで定義される設定を使って、 Scalafmt でフォーマットできます（デフォルトでは `.scalafmt.conf` を使用します）。  
 `schemaPath` から URL を生成すると、`--headers` オプションでリクエストヘッダーを与えられます。  
 生成コードのパッケージは `outputPath` のフォルダーから決定されます。  
