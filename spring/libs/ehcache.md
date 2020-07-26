@@ -1,8 +1,15 @@
+# Cache について
 
+Spring Boot で Cache を使う場合のまとめ
 
-https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/reference/html/boot-features-caching.html
+## 対象
+
+公式ドキュメントを参照
+サポートしているライブラリは以下
+
+https://docs.spring.io/spring-boot/docs/2.2.9.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider
 ```
-33.1 Supported Cache Providers
+12.1. Supported Cache Providers
 The cache abstraction does not provide an actual store and relies on abstraction materialized by the org.springframework.cache.Cache and org.springframework.cache.CacheManager interfaces.
 
 If you have not defined a bean of type CacheManager or a CacheResolver named cacheResolver (see CachingConfigurer), Spring Boot tries to detect the following providers (in the indicated order):
@@ -18,6 +25,10 @@ Caffeine
 Simple
 ```
 
+## 設定方法
+
+### ビルドツールへの設定
+
 cache library をアプリケーションに引き込む設定をビルドツールに記述する  
 gradle の場合は以下  
 ```
@@ -27,7 +38,9 @@ compile group: 'org.ehcache', name: 'ehcache', version: '3.6.1'
 }
 ```
 
-設定ファイル  
+### 設定ファイル  
+
+- ehcache の場合  
 ehcache.xml に設定を記載する  
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -41,17 +54,28 @@ ehcache.xml に設定を記載する
 </ehcache>
 ```
 
-application.yaml  
+### Spring-Boot 用の設定  
+
+Spring Boot 側の設定  
+使用するライブラリを Spring Boot に教えるための設定  
 複数のキャッシュライブラリを使う場合に必要  
+
+- application.yaml    
 ```yaml
 spring:
   cache:
     type: ehcache
 ```
 
+### 実装  
+
 コードのメソッドに `@Cacheable` をつける
 ```java
-@Cacheable("getCache") //このメソッドについてキャッシュを有効にする
+@Component
+class SampleCache {
+
+     //このメソッドについてキャッシュを有効にする
+    @Cacheable("getCache")
     public String getFromCache(String key){
         try {
             Thread.sleep(3000L);
@@ -60,5 +84,6 @@ spring:
         }
         return "End getFromCache:" + key;
     }
+}
 ```
 
