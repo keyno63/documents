@@ -4,7 +4,7 @@ Spring Boot で Cache を使う場合のまとめ
 
 ## 対象
 
-公式ドキュメントを参照
+公式ドキュメントを参照  
 サポートしているライブラリは以下
 
 https://docs.spring.io/spring-boot/docs/2.2.9.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider
@@ -31,10 +31,13 @@ Simple
 
 cache library をアプリケーションに引き込む設定をビルドツールに記述する  
 gradle の場合は以下  
-```
+```groovy
 dependencies {
-// https://mvnrepository.com/artifact/org.ehcache/ehcache
-compile group: 'org.ehcache', name: 'ehcache', version: '3.6.1'
+  compile "org.springframework.boot:spring-boot-starter-cache"
+  // https://mvnrepository.com/artifact/org.ehcache/ehcache
+  compile "org.ehcache:ehcache:3.6.1"
+  
+  compile "com.github.ben-manes.caffeine:caffeine"
 }
 ```
 
@@ -53,6 +56,18 @@ ehcache.xml に設定を記載する
     </cache>
 </ehcache>
 ```
+
+- caffeine の場合  
+application.yaml に設定を記述する
+```yaml
+spring:
+  cache:
+    cache-names: HistoryCache
+    caffeine:
+      spec: maximumSize=100, expireAfterWrite=60s
+```
+詳しい設定辺りは以下
+https://www.javadoc.io/doc/com.github.ben-manes.caffeine/caffeine/2.2.0/com/github/benmanes/caffeine/cache/Caffeine.html
 
 ### Spring-Boot 用の設定  
 
@@ -75,7 +90,7 @@ spring:
 class SampleCache {
 
      //このメソッドについてキャッシュを有効にする
-    @Cacheable("getCache")
+    @Cacheable("getCache") // 引数は cache 名
     public String getFromCache(String key){
         try {
             Thread.sleep(3000L);
@@ -86,4 +101,3 @@ class SampleCache {
     }
 }
 ```
-
