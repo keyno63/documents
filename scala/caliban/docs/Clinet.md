@@ -5,7 +5,7 @@ GraphQL クライアント
 これは [sttp](https://github.com/softwaremill/sttp) の上に構築されているため、選択したバックエンドを使用してリクエストを実行できます。
 
 Caliban と同様、 `caliban-client` は純粋関数的なインターフェースを提供し、ボイラープレートを最小限に抑えます。  
-これは次のように働きます。  
+これは次のよう効果があります。  
 1. `caliban-codegen-sbt` ツールを使うことで、与えられた GraphQL スキーマからボイラープレートコードを生成します  
 2. 生成されたコードからヘルパーを結合することで GraphQL クエリー/ミューテーション を記述します  
 3. クエリー/ミューテーションを `sttp` リクエストに変換し、好きなバックエンドで実行します
@@ -47,8 +47,6 @@ calibanGenClient project/schema.graphql src/main/Client.scala
 
 ## クエリーの生成
 
-Once the boilerplate code is generated, you can start building queries. For each *type* in your schema, a corresponding Scala object has been created. For each *field* in your schema, a corresponding Scala function has been created.
-
 ボイラープレートコードが生成されたら、クエリーの生成を始めることができます。  
 スキーマの *型* ごとに、対応する Scala オブジェクトが作成されます。  
 スキーマの *フィールド* ごとに、対応する Scala 関数が作成されます。  
@@ -85,7 +83,7 @@ val selection: SelectionBuilder[Character, (String, List[String])] =
 
 複数のフィールドを組み合わせる場合は、 case class を使用してデータを表すと便利です。  
 これはネストされたタプルが表示されないようにするためです。  
-`mapN`を使用することで、ネストされたタプルを case class にマッピできます。
+`mapN`を使用することで、ネストされたタプルを case class にマップできます。
 
 ```scala
 case class CharacterView(name: String, nickname: List[String], origin: Origin)
