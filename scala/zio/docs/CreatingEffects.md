@@ -34,7 +34,7 @@ val f1 = ZIO.fail("Uh oh!")
 
 `ZIO` データ型に対して、エラー型の制限はありません。  
 アプリケーションに適した文字列、例外、またはカスタムデータ型を使用できます。  
-`Throwable` 、および `Exception` を拡張したクラスを用いて、多くのアプリケーションは失敗をモデル化します。
+`Throwable` 、または `Exception` を拡張したクラスを用いて、多くのアプリケーションは失敗をモデル化します。
 ```scala
 val f2 = Task.fail(new Exception("Uh oh!"))
 ```
@@ -116,7 +116,7 @@ lazy val future = Future.successful(“Hello!”)
 
 val zfuture: Task[String] =
   ZiO.fromFuture { implicit ec =>
-    future.map(_ => “Goodbye!”)
+    future.map(_ => "Goodbye!")
   }
 ```
 
@@ -130,7 +130,7 @@ val zfuture: Task[String] =
 
 ZIO は同期／非同期に関らずに副作用を ZIO エフェクト（pure の値）に変換することができます。  
 これらの関数を使用して手続き型コードをラップすることにより、  
-レガシーな Scala、および Java コードだけでなく、サードパーティーのライブラリーに対しても  
+レガシーな Scala、または Java コードだけでなく、サードパーティーのライブラリーに対しても  
 すべてのZIOの機能をシームレスに使用できます。
 
 ### 同期的な副作用
@@ -173,7 +173,7 @@ object legacy {
 }
 
 val login: IO[AuthError, User] =
-  IO.effectAsync[AuthError, User] { vallback =>
+  IO.effectAsync[AuthError, User] { callback =>
       legacy.login(
         user => callback(IO.succeed(user)),
         err    => callback(IO.fail(IO.fail(err))
@@ -230,5 +230,5 @@ def safeDownload(url: String) =
 
 ## 次のステップ
 
-値、Scala データデータ型、および副作用からエフェクトを作成することに慣れている場合、  
-次のステップは、エフェクトの基本的な操作を学ぶことです。
+値、Scala データデータ型、および副作用からエフェクトを作成することに慣れてきたら、  
+次のステップで、エフェクトの基本的な操作を学びます。
