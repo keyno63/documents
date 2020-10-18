@@ -56,3 +56,18 @@ wrappers　は一旦からの状態で持つ
 - Validator
 - Parser
 - OperationType
+
+### GraphQLRequest
+
+生成器として case class  
+以下の class 定義が先に必要
+- InputValue
+
+object GraphQLRequest を定義  
+implicit 変数を宣言するための object っぽい。
+後続で GraphQLRequestCirce, GraphQLRequestPlayJson を定義しているので、  
+それを使う
+
+JSON parser の戻り値は interop package に書く
+
+
