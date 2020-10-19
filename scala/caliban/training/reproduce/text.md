@@ -70,4 +70,16 @@ implicit 変数を宣言するための object っぽい。
 
 JSON parser の戻り値は interop package に書く
 
+### Json(circe/playJson)
+
+IsCirceDecoder, IsPlayJsonReads などを定義する  
+
+以下の class などを先に定義しておかないといけない  
+- Schema
+- __Type
+- schema.Types
+- Step
+- InputValue
+- ResponseValue
+- Step.PureStep
 
