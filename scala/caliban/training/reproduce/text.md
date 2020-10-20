@@ -72,6 +72,7 @@ JSON parser の戻り値は interop package に書く
 
 ### Json(circe/playJson)
 
+外部ライブラリの Json ライブラリを使うためのクラス  
 IsCirceDecoder, IsPlayJsonReads などを定義する  
 
 以下の class などを先に定義しておかないといけない  
