@@ -84,3 +84,9 @@ IsCirceDecoder, IsPlayJsonReads などを定義する
 - ResponseValue
 - Step.PureStep
 
+### Schema
+
+以下の class などを先に定義しておかないといけない
+- __Type
+- Step
+- __InputValue
