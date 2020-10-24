@@ -90,3 +90,9 @@ IsCirceDecoder, IsPlayJsonReads などを定義する
 - __Type
 - Step
 - __InputValue
+
+obeject Schema は GenericSchema を拡張する  
+追加の変数・メソッドの実装などはない  
+
+GenericSchema は DerivationSchema、TemporalSchema を拡張・ミックスインする  
+なので、その基底クラスを先に定義する必要がある（同一ファイル内）  
