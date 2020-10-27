@@ -96,3 +96,15 @@ obeject Schema は GenericSchema を拡張する
 
 GenericSchema は DerivationSchema、TemporalSchema を拡張・ミックスインする  
 なので、その基底クラスを先に定義する必要がある（同一ファイル内）  
+
+GenericSchema 内のメソッドでは以下の class、メソッドに依存してる.  
+- Types.makeInputObject()
+- Types.makeObject()
+- Step.ObjectStep
+
+toType() で isInput の値で InputObject, makeObject に分岐してるんですけど、  
+違いって何なのかはここでは理解できませんでした。  
+
+また、gql の型定義もおこなう（unitSchema, booleanSchema など） 
+その際に以下の class に対応する Object が必要になる   
+- Value
