@@ -84,6 +84,8 @@ spring:
 
 ### 実装  
 
+- メソッドの実行結果をキャッシュする
+
 コードのメソッドに `@Cacheable` をつける
 ```java
 @Component
@@ -100,4 +102,46 @@ class SampleCache {
         return "End getFromCache:" + key;
     }
 }
+```
+
+- データをキャッシュする
+
+CacheManager を使い、Key:Value の形式でオブジェクトを保存する  
+
+事前に設定ファイル（ehcache.xml）を作成する  
+格納場所は <project root>/main/resources/ehcache.xml とする
+```xml
+  <cache>
+    <key-type>my.class.Key</key-type>
+    <value-type>my.class.Value</value-type>
+  </cache>
+```
+Key, Value はキャッシュの管理をおこなうのに使う Class を指定する。  
+今回は my.class.* にある独自 Class で管理している場合を想定している。  
+
+キャッシュの登録を管理する CacheManager の生成
+```java
+class CacheManager {
+    public CacheManager() {init();}
+
+    public void init() throws IOException {
+        Configuration xmlConfiguration =
+                new XmlConfiguration(new ClassPathResource("ehcache.xml").getURL());
+
+        CacheManager cacheManager = CacheManagerBuilder.newCacheManager(xmlConfig);
+        cacheManager.init();
+
+        Cache<Key, Value> cache = cacheManager.getCache("alias", Key.class, Value);
+    }
+}
+```
+
+実際にデータの追加や取得する方法は以下
+```java
+// 停止
+cacheManager.close()
+// キャッシュ取得
+Value get(Key key) {return cache.get(key);}
+// キャッシュ追加・更新
+void put(Key key, Value value) { cache.put(key, value);}
 ```
