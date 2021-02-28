@@ -46,3 +46,41 @@ fun onButtonStart(view: View?) {
     finish()
 }
 ```
+
+## 別の画面へのパラメーター渡し
+
+別の画面への遷移時、前の画面処理で取得した値を  
+次の画面で取得する方法.  
+
+パラメーターを渡しているというより、前の画面で変数化し、  
+次の画面で参照しているような？
+
+```kotlin
+class MainActivity: AppCompatActivity() {
+    fun onButtonSearch(view: View?) {
+        val intent = Intent(this, SearchActivity::class.java)
+
+        // 次の画面で取得したい値の定義
+        val text = "any_value"
+
+        // 取得するための値の設定
+        intent.putExtra("SEARCH_RESULT", text)
+        startActivity(intent)
+    }
+}
+```
+
+参照したい画面では以下のように書く
+```kotlin
+class SearchActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_search)
+
+        val intent = getIntent()
+        // 遷移前の画面の変数の取得
+        val message = intent.extras?.getString("SEARCH_RESULT")?:""
+        editTextTextPersonName.setText(message)
+    }
+}
+```
