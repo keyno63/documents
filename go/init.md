@@ -86,6 +86,12 @@ Go のパッケージ管理ツールについて.
 2021 年現在(go 1.12 以降)では `go mod` を使うのが一般で、  
 一部は慣例で `vendoring` を使っているものがあるらしい
 
+ファイルのある場所で `go mod` コマンドを実行する.  
+```shell
+cd work\
+go mod
+```
+
 ## ライブラリ
 ### フレームワーク
 
@@ -96,5 +102,12 @@ Web API で Hello World したい
 https://qiita.com/yumin/items/5de33b068ead564ebcbf
 
 [Gin](https://github.com/gin-gonic/gin) というのが一番使われてそう？
+
+### フレームワークのダウンロード
+
+以下のコマンドで gin をダウンロードします(go mod は...?)
+`go get github.com/gin-gonic/gin`
+
+https://pleiades.io/help/go/create-a-project-with-go-modules-integration.html#working-with-go-modules
 
 
