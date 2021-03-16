@@ -102,10 +102,15 @@ Web API で Hello World したい
 https://qiita.com/yumin/items/5de33b068ead564ebcbf
 
 [Gin](https://github.com/gin-gonic/gin) というのが一番使われてそう？
+だいたいだと以下
+- Gin
+- Echo
+- Martini
+- Revel
 
 ### フレームワークのダウンロード
 
-以下のコマンドで gin をダウンロードします(go mod は...?)
+以下のコマンドで gin をダウンロードします
 `go get github.com/gin-gonic/gin`
 
 https://pleiades.io/help/go/create-a-project-with-go-modules-integration.html#working-with-go-modules
