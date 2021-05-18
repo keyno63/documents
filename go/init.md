@@ -191,10 +191,6 @@ func Test1(t *testing.T) {
 }
 ```
 
-```go
-
-```
-
 ## 環境変数
 
 - GOPATH
