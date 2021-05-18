@@ -128,3 +128,10 @@ https://pleiades.io/help/go/create-a-project-with-go-modules-integration.html#wo
 ```go
 
 ```
+
+## 環境変数
+
+- GOPATH
+- GOHOME
+- GOPRIVATE: private repos や Github Enterprise などから取得するための設定
+  export GOPRIVATE="*.github.com"
