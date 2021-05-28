@@ -193,8 +193,8 @@ func Test1(t *testing.T) {
 
 ## 環境変数
 
-- GOPATH
-- GOHOME
+- GOPATH: Go のコマンドやパッケージインストール先のホームディレクトリを指定する
+- GOHOME: つかっているのか？？
 - GOPRIVATE: private repos や Github Enterprise などから取得するための設定
   export GOPRIVATE="*.github.com"
 
