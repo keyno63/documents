@@ -197,3 +197,9 @@ func Test1(t *testing.T) {
 - GOHOME
 - GOPRIVATE: private repos や Github Enterprise などから取得するための設定
   export GOPRIVATE="*.github.com"
+
+## ディレクトリ構成について
+
+参考にされるスタンダードなディレクトリ構成が、有志の方達の間で検討されているらしい。  
+以下を参照
+https://github.com/golang-standards/project-layout
