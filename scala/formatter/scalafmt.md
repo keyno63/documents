@@ -1,8 +1,19 @@
 # scalafmt
 
+scala 用の formatter.  
+
+
+## plugin の追加  
+
+`<project root>/project/plugins.sbt` に以下を追加  
+```sbt
+addSbtPlugin("org.scalameta"      % "sbt-scalafmt"             % "2.4.2")
+```
+
+## 設定ファイル
 ルートに `.scalafmt.conf` を配置.
 
-## サンプル
+### サンプル
 使いたいやつ
 ```
 version = "2.4.2"
@@ -22,3 +33,9 @@ optIn.annotationNewlines = true
 
 rewrite.rules = [SortImports, RedundantBraces]
 ```
+
+## 実行  
+
+sbt による実行.
+- `sbt scalafmtSbt`: `.sbt` ファイルの format を実行
+- `sbt scalafmt`: ソースコードの fotmat を実行  
